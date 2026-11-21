@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="es-CL">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#101b37">
+  <meta name="description" content="Las Estrellas Perdidas: videojuego de plataformas para celular y computador. Funciona sin Internet.">
+  <title>Las Estrellas Perdidas · Juego de plataformas</title>
+  <style>
+    :root{color-scheme:dark;--bg:#0e1732;--surface:#192748;--line:#405378;--mint:#75f3ce;--gold:#ffdc6b;--white:#fffdf5}
+    *{box-sizing:border-box}html{background:var(--bg)}
+    body{margin:0;min-height:100svh;background:radial-gradient(circle at 20% 0%,#28486f 0,transparent 32%),radial-gradient(circle at 92% 75%,#273365 0,transparent 45%),#0e1732;color:var(--white);font:500 15px/1.45 system-ui,-apple-system,"Segoe UI",Arial,sans-serif;overflow-x:hidden}
+    .page{width:min(100%,1020px);margin:auto;padding:15px 15px 24px}
+    .top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}
+    .branding .kicker{color:var(--mint);font-size:10px;font-weight:900;letter-spacing:.22em;margin:0 0 2px;text-transform:uppercase}
+    h1{font-size:clamp(22px,3.7vw,34px);line-height:1.12;letter-spacing:-.052em;margin:0;font-weight:950}
+    h1 em{font-style:normal;color:var(--gold)}
+    .chip{border:1px solid #607c99;background:#203353;color:#dbefff;border-radius:999px;font-size:11px;font-weight:800;padding:7px 11px;white-space:nowrap}
+    .stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin-bottom:11px}
+    .stat{border:1px solid #46607c;background:#172848d9;box-shadow:inset 0 1px #ffffff13;border-radius:13px;padding:8px 12px;min-width:0}
+    .stat small{display:block;text-transform:uppercase;letter-spacing:.1em;font-size:10px;font-weight:800;color:#b6c9e0}
+    .stat b{font-size:clamp(18px,2.8vw,24px);font-variant-numeric:tabular-nums}
+    .stat:nth-child(1) b,.stat:nth-child(2) b{color:var(--gold)}.stat:nth-child(3) b{color:#ff9eb6}
+    .game-shell{position:relative;overflow:hidden;border:3px solid #7096b1;border-radius:20px;background:#7dd9e5;box-shadow:0 0 0 5px #080e22,0 20px 65px #0009}
+    #game{display:block;width:100%;height:auto;aspect-ratio:900/480;image-rendering:auto;touch-action:none;outline:none}
+    .viewport-top{position:absolute;top:11px;left:12px;right:12px;display:flex;justify-content:space-between;pointer-events:none;gap:8px}
+    .world-name{font-size:12px;font-weight:900;color:#17344b;background:#f9fff0cb;padding:6px 11px;border-radius:9px}
+    .game-toast{color:#19344f;background:#fbe7a5ec;border-radius:8px;padding:6px 10px;font-size:12px;font-weight:900;opacity:0;transition:opacity .18s}
+    .game-toast.visible{opacity:1}
+    .overlay{position:absolute;inset:0;display:grid;place-items:center;padding:15px;background:#0b193cba;backdrop-filter:blur(4px);z-index:3}
+    .overlay.hidden{display:none}
+    .panel{width:min(100%,395px);text-align:center;border-radius:22px;border:2px solid #a4d9e5;background:linear-gradient(150deg,#244c6a,#142644);box-shadow:0 14px 40px #0007;padding:23px 18px}
+    .medallion{font-size:43px;line-height:1.1;margin-bottom:5px}
+    .panel h2{font-size:clamp(24px,4vw,35px);line-height:1.1;margin:5px 0 9px;color:#ffecb3}
+    .panel p{font-size:14px;color:#e0f1ff;margin:0 auto 18px;max-width:330px}
+    button{font:inherit;cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent}
+    .start-btn{background:linear-gradient(115deg,#ffe179,#ffb96f);color:#26344e;border:0;padding:12px 22px;min-height:49px;border-radius:13px;font-size:16px;font-weight:950;box-shadow:inset 0 2px #ffffff66,0 5px 0 #ac6b45}
+    .start-btn:active{transform:translateY(3px);box-shadow:inset 0 1px #ffffff66,0 2px 0 #ac6b45}
+    .controls{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:14px}
+    .direction-controls{display:flex;gap:11px}
+    .control{width:90px;height:78px;border-radius:18px;border:2px solid #6f93b9;color:white;background:linear-gradient(145deg,#375a88,#26365d);font-size:30px;font-weight:950;box-shadow:inset 0 2px #ffffff30,0 5px 0 #091b3c;touch-action:none;display:grid;place-items:center}
+    .control:active,.control.active{transform:translateY(3px);background:linear-gradient(145deg,#5c91c4,#355c91);box-shadow:inset 0 1px #ffffff30,0 2px 0 #091b3c}
+    #jump{width:156px;background:linear-gradient(145deg,#ffe17e,#fba869);border-color:#ffe5a3;color:#583426;font-size:18px;letter-spacing:.045em;box-shadow:inset 0 2px #ffffff80,0 5px 0 #99553d}
+    #jump:active,#jump.active{transform:translateY(3px);box-shadow:inset 0 2px #ffffff80,0 2px 0 #99553d}
+    .actions{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:15px}
+    .secondary{background:#203353;color:#d6e8fb;border:1px solid #58759b;border-radius:10px;padding:8px 13px;font-size:12px;font-weight:800;min-height:35px}
+    .hint{margin:0;color:#bdd0e4;font-size:12px;text-align:right}
+    .credit{font-size:11px;color:#96acca;text-align:center;margin:15px 0 0}
+    @media(max-width:640px){
+      .page{padding:7px 8px 12px}.top{margin-bottom:7px}.branding .kicker,.chip{display:none}
+      h1{font-size:clamp(19px,5.1vw,25px);white-space:nowrap}
+      .stats{gap:5px;margin-bottom:7px}.stat{border-radius:10px;padding:5px 5px;text-align:center}
+      .stat small{font-size:9px;letter-spacing:0}.stat b{font-size:19px}
+      .game-shell{border-width:2px;border-radius:12px;box-shadow:0 0 0 2px #0b1730,0 9px 22px #0008}
+      #game{aspect-ratio:640/480}
+      .viewport-top{top:6px;left:7px;right:7px}.world-name,.game-toast{font-size:9px;padding:4px 7px}
+      .overlay{padding:6px}.panel{padding:13px 10px;border-radius:14px}.medallion{font-size:30px}.panel h2{font-size:21px;margin:3px 0 5px}.panel p{font-size:11px;line-height:1.35;margin-bottom:10px}.start-btn{min-height:41px;font-size:13px;padding:8px 14px}
+      .controls{margin-top:10px;gap:7px}.direction-controls{gap:9px}.control{width:clamp(74px,23vw,98px);height:88px;font-size:31px;border-radius:16px}#jump{width:clamp(105px,32vw,148px);font-size:17px}
+      .actions{margin-top:10px;flex-wrap:wrap}.secondary{padding:6px 11px}.hint{font-size:10px}.credit{margin:10px 0 0}
+    }
+    @media(max-height:730px) and (max-width:640px){
+      .control{height:73px}.controls{margin-top:7px}.actions{margin-top:8px}.credit{display:none}
+    }
+    @media(max-width:350px){h1{font-size:17px}.control{width:72px;height:72px}#jump{width:104px}.hint{display:none}}
+    @media(prefers-reduced-motion:reduce){.game-toast{transition:none}}
+  </style>
+<style>.arcade-nav-link{color:#e4d2ff;text-decoration:none;border-bottom:1px solid currentColor;padding-bottom:1px}.arcade-nav-link:focus-visible{outline:2px solid #b4e2ff;outline-offset:3px}</style>
+</head>
+<body>
+<main class="page">
+  <div class="top"><div class="branding"><p class="kicker"><a class="arcade-nav-link" href="../index.html" aria-label="Volver al menú">← Juegos</a> · Plataformas</p><h1><em>ESTRELLAS</em> PERDIDAS</h1></div><span class="chip">3 mundos por explorar</span></div>
+  <section class="stats" aria-label="Marcadores"><div class="stat"><small>Puntos</small><b id="points">0</b></div><div class="stat"><small>Monedas</small><b id="coins">0</b></div><div class="stat"><small>Vidas</small><b id="lives">4</b></div><div class="stat"><small>Mundo</small><b id="level">1/3</b></div></section>
+  <div class="game-shell" id="gameShell">
+    <canvas id="game" width="900" height="480" tabindex="0" aria-label="Juego de plataformas con tres mundos"></canvas>
+    <div class="viewport-top"><div class="world-name" id="worldName">Pradera de luz</div><div class="game-toast" id="toast"></div></div>
+    <div class="overlay" id="overlay">
+      <div class="panel"><div class="medallion" id="overlayIcon">🌟</div><h2 id="overlayTitle">¡A explorar!</h2><p id="overlayText">Recorre tres mundos, recoge monedas y salta sobre los pequeños monstruos. ¡Alcanza la bandera brillante para pasar de nivel!</p><button class="start-btn" id="overlayButton">¡Comenzar aventura!</button></div>
+    </div>
+  </div>
+  <div class="controls" aria-label="Controles táctiles"><div class="direction-controls"><button type="button" class="control" id="left" aria-label="Mover a la izquierda">◀</button><button type="button" class="control" id="right" aria-label="Mover a la derecha">▶</button></div><button type="button" class="control" id="jump" aria-label="Saltar">↑ SALTAR</button></div>
+  <div class="actions"><div><button class="secondary" id="pause">Pausar</button> <button class="secondary" id="restart">Reiniciar</button></div><p class="hint">Teclado: ← → y espacio para saltar</p></div>
+  <p class="credit">Personaje y mundos originales · Juego HTML sin conexión a Internet</p>
+</main>
+<script>
+(()=>{'use strict';
+  const $=id=>document.getElementById(id);
+  const canvas=$('game'), ctx=canvas.getContext('2d');
+  const ui={points:$('points'),coins:$('coins'),lives:$('lives'),level:$('level'),world:$('worldName'),toast:$('toast'),overlay:$('overlay'),icon:$('overlayIcon'),title:$('overlayTitle'),text:$('overlayText'),button:$('overlayButton'),pause:$('pause')};
+  const H=480, GROUND=426, PH={w:32,h:43}, GRAVITY=1570, SPEED=250, JUMP=-645;
+  const worlds=[
+    {name:'Pradera de luz',sky:['#68d6e5','#c9fbdf'],hill:['#67bf9d','#41958f'],ground:'#3f9d72',accent:'#facc62',length:2680,
+      grounds:[[0,650],[730,1300],[1375,1980],[2050,2680]],
+      platforms:[[185,342,135],[435,304,150],[810,330,145],[1100,290,160],[1460,333,150],[1740,285,145],[2180,330,165],[2420,302,155]],
+      enemies:[360,890,1200,1550,1860,2260],extra:[[260,291],[485,252],[1150,242],[1790,231],[2490,250]]},
+    {name:'Bosque de cristal',sky:['#74b1ec','#ceddff'],hill:['#728bd3','#4c62a6'],ground:'#4389a5',accent:'#fbc47f',length:3060,
+      grounds:[[0,560],[640,1190],[1275,1870],[1955,2520],[2600,3060]],
+      platforms:[[130,341,142],[355,300,152],[715,329,152],[975,285,165],[1370,335,160],[1640,292,160],[2050,330,143],[2300,290,155],[2660,340,146],[2830,301,137]],
+      enemies:[375,860,1080,1450,1720,2150,2400,2740],extra:[[405,248],[1020,230],[1715,236],[2330,236],[2890,247]]},
+    {name:'Cumbres de las estrellas',sky:['#42539a','#b79ce6'],hill:['#736eb5','#4a498f'],ground:'#5d73af',accent:'#f4a5e6',length:3280,
+      grounds:[[0,590],[675,1260],[1340,1955],[2035,2610],[2690,3280]],
+      platforms:[[160,332,150],[420,292,145],[750,333,154],[1030,286,154],[1450,338,156],[1710,295,148],[2110,332,163],[2370,281,155],[2775,335,150],[2980,292,160]],
+      enemies:[355,515,830,1120,1500,1810,2200,2510,2840,3110],extra:[[475,243],[1070,235],[1750,245],[2410,225],[3030,239]]}
+  ];
+  let viewW=900, levelIdx=0, level, player, enemies=[],coins=[],sparkles=[],cam=0,score=0,collected=0,lives=4,phase='ready',lastTime=0,gameT=0,toastTime=0,best=0;
+  const input={left:false,right:false,jump:false};
+  try{best=Number(localStorage.getItem('estrellas-perdidas-record'))||0;}catch(_){/* storage disabled */}
+  function resize(){const next=innerWidth<=640?640:900;if(next!==viewW){viewW=next;canvas.width=viewW;canvas.height=H;}else{canvas.width=viewW;canvas.height=H;}ctx.imageSmoothingEnabled=true;}
+  window.addEventListener('resize',resize,{passive:true});resize();
+  const clamp=(v,lo,hi)=>Math.max(lo,Math.min(hi,v));
+  const rand=(i)=>{const x=Math.sin(i*67.347+27.17)*43758.5453;return x-Math.floor(x);};
+  function updateHud(){ui.points.textContent=score.toLocaleString('es-CL');ui.coins.textContent=collected;ui.lives.textContent=lives;ui.level.textContent=(levelIdx+1)+'/3';ui.world.textContent=level.name;}
+  function say(t,duration=1.4){ui.toast.textContent=t;ui.toast.classList.add('visible');toastTime=gameT+duration;}
+  function overlay(icon,title,message,button){ui.icon.textContent=icon;ui.title.textContent=title;ui.text.textContent=message;ui.button.textContent=button;ui.overlay.classList.remove('hidden');}
+  function resetInputs(){input.left=input.right=input.jump=false;document.querySelectorAll('.control').forEach(x=>x.classList.remove('active'));}
+  function setLevel(index){
+    levelIdx=index;level=worlds[index];cam=0;
+    const startX=55;
+    player={x:startX,y:GROUND-PH.h,vx:0,vy:0,onGround:true,coyote:.1,jumpBuffer:0,invuln:1,checkpoint:55,anim:0};
+    enemies=level.enemies.map((x,i)=>({x,y:GROUND-31,w:34,h:31,home:x,range:i%2?51:43,v:i%3?44:55,alive:true,phase:rand(i+index*10)*Math.PI*2}));
+    coins=[];sparkles=[];
+    for(let i=0;i<level.grounds.length;i++){
+      const [a,b]=level.grounds[i];
+      for(let x=a+90;x<b-80;x+=113){coins.push({x,y:GROUND-34-(Math.floor(x/113)%3===0?27:0),taken:false});}
+    }
+    level.platforms.forEach(([x,y,w],i)=>{coins.push({x:x+Math.floor(w/2),y:y-34,taken:false});if(i%2===0)coins.push({x:x+Math.floor(w/2)-34,y:y-34,taken:false});});
+    for(const [x,y] of level.extra)coins.push({x,y,taken:false});
+    updateHud();
+  }
+  function start(){score=0;collected=0;lives=4;gameT=0;setLevel(0);phase='playing';ui.overlay.classList.add('hidden');ui.pause.textContent='Pausar';resetInputs();say('¡Adelante!',1.8);canvas.focus({preventScroll:true});}
+  function finishLevel(){phase='levelclear';resetInputs();if(levelIdx===worlds.length-1){score+=400;updateHud();overlay('🏆','¡GANASTE!','¡Conquistaste los tres mundos! Reuniste '+collected+' monedas y '+score.toLocaleString('es-CL')+' puntos. ¡Qué gran aventura!','Jugar otra vez');phase='victory';}else{score+=200;updateHud();overlay('⭐','¡Nivel superado!','¡Muy bien! Superaste '+level.name+'. El siguiente mundo tiene nuevos retos y monedas por descubrir.','Siguiente mundo');}}
+  function advance(){if(phase==='ready'||phase==='gameover'||phase==='victory')return start();if(phase==='levelclear'){setLevel(levelIdx+1);phase='playing';ui.overlay.classList.add('hidden');say('¡Nuevo mundo!',1.8);canvas.focus({preventScroll:true});}else if(phase==='paused'){phase='playing';ui.overlay.classList.add('hidden');ui.pause.textContent='Pausar';}}
+  ui.button.addEventListener('click',advance);
+  function togglePause(){if(phase==='playing'){phase='paused';resetInputs();ui.pause.textContent='Continuar';overlay('⏸','Juego en pausa','Puedes continuar desde donde quedaste.','Continuar jugando');}else if(phase==='paused'){advance();}}
+  ui.pause.addEventListener('click',togglePause);
+  $('restart').addEventListener('click',()=>{start();});
+  const keymap={'ArrowLeft':'left','KeyA':'left','ArrowRight':'right','KeyD':'right','ArrowUp':'jump','KeyW':'jump','Space':'jump'};
+  window.addEventListener('keydown',e=>{const m=keymap[e.code];if(m){e.preventDefault();if(m==='jump'&&!input.jump)requestJump();input[m]=true;}else if(e.code==='KeyP'||e.code==='Escape'){e.preventDefault();togglePause();}else if(e.code==='KeyR'){start();}});
+  window.addEventListener('keyup',e=>{const m=keymap[e.code];if(m){e.preventDefault();input[m]=false;}});
+  window.addEventListener('blur',()=>resetInputs());
+  function requestJump(){if(player&&phase==='playing')player.jumpBuffer=.14;}
+  for(const key of ['left','right','jump']){
+    const b=$(key),pointers=new Set();
+    b.addEventListener('pointerdown',e=>{e.preventDefault();b.setPointerCapture(e.pointerId);pointers.add(e.pointerId);if(key==='jump'&&!input.jump)requestJump();input[key]=true;b.classList.add('active');});
+    const release=e=>{pointers.delete(e.pointerId);if(pointers.size===0){input[key]=false;b.classList.remove('active');}};
+    b.addEventListener('pointerup',release);b.addEventListener('pointercancel',release);b.addEventListener('lostpointercapture',release);
+    b.addEventListener('contextmenu',e=>e.preventDefault());
+  }
+  function inGround(x,width=PH.w){return level.grounds.some(([a,b])=>x+width>a+4&&x<b-4);}
+  function landAt(oldFeet,newFeet,x,width){
+    let target=Infinity;
+    for(const [a,b] of level.grounds){if(x+width>a+3&&x<b-3&&oldFeet<=GROUND+5&&newFeet>=GROUND)target=Math.min(target,GROUND);}
+    for(const [px,py,pw] of level.platforms){if(x+width>px+4&&x<px+pw-4&&oldFeet<=py+5&&newFeet>=py)target=Math.min(target,py);}
+    return Number.isFinite(target)?target:null;
+  }
+  function loseLife(reason){if(phase!=='playing'||player.invuln>0)return;lives--;updateHud();sparkles.push({x:player.x+16,y:player.y+17,t:0,kind:'hit'});if(lives<=0){phase='gameover';resetInputs();overlay('💫','¡Buen intento!','Conseguiste '+score.toLocaleString('es-CL')+' puntos y llegaste al mundo '+(levelIdx+1)+'. ¡Puedes volver a intentarlo!','Volver a jugar');return;}player.x=player.checkpoint;player.y=GROUND-PH.h;player.vx=0;player.vy=0;player.onGround=true;player.invuln=2.5;cam=clamp(player.x-viewW*.35,0,Math.max(0,level.length-viewW));say('¡Ánimo! Quedan '+lives+' vidas',1.6);}
+  function tick(dt){
+    if(phase!=='playing')return;
+    gameT+=dt;
+    if(gameT>=toastTime)ui.toast.classList.remove('visible');
+    player.anim+=dt;player.invuln=Math.max(0,player.invuln-dt);
+    player.jumpBuffer=Math.max(0,player.jumpBuffer-dt);
+    player.coyote=player.onGround?.11:Math.max(0,player.coyote-dt);
+    if(player.jumpBuffer>0&&player.coyote>0){player.vy=JUMP;player.onGround=false;player.coyote=0;player.jumpBuffer=0;sparkles.push({x:player.x+15,y:player.y+PH.h,t:0,kind:'jump'});}
+    const horiz=(input.right?1:0)-(input.left?1:0);
+    player.vx=horiz*SPEED;
+    player.x=clamp(player.x+player.vx*dt,0,level.length-PH.w);
+    if(player.vy<-170&&!input.jump)player.vy+=GRAVITY*dt*.20;
+    player.vy=Math.min(900,player.vy+GRAVITY*dt);
+    const oldFeet=player.y+PH.h;
+    player.y+=player.vy*dt;
+    player.onGround=false;
+    if(player.vy>=0){const top=landAt(oldFeet,player.y+PH.h,player.x,PH.w);if(top!==null){player.y=top-PH.h;player.vy=0;player.onGround=true;}}
+    // Checkpoint at the beginning of each safe island.
+    for(const [a,b] of level.grounds){if(player.x>a+20&&player.x<b-100&&a+38>player.checkpoint&&player.onGround)player.checkpoint=a+38;}
+    if(player.y>H+30){player.invuln=0;loseLife('fall');return;}
+    for(const c of coins){if(c.taken)continue;const dx=player.x+PH.w/2-c.x,dy=player.y+PH.h/2-c.y;if(dx*dx+dy*dy<27*27){c.taken=true;collected++;score+=10;sparkles.push({x:c.x,y:c.y,t:0,kind:'coin'});updateHud();}}
+    for(const e of enemies){if(!e.alive)continue;e.x+=e.v*dt;if(e.x>e.home+e.range){e.x=e.home+e.range;e.v=-Math.abs(e.v);}if(e.x<e.home-e.range){e.x=e.home-e.range;e.v=Math.abs(e.v);}const touch=player.x<e.x+e.w-4&&player.x+PH.w>e.x+4&&player.y<e.y+e.h-3&&player.y+PH.h>e.y+3;
+      if(touch&&player.vy>65&&oldFeet<=e.y+15){e.alive=false;score+=50;player.vy=-410;player.onGround=false;updateHud();say('¡Buen salto! +50',1.1);sparkles.push({x:e.x+15,y:e.y,t:0,kind:'stomp'});}else if(touch&&player.invuln<=0){loseLife('enemy');return;}}
+    sparkles=sparkles.filter(p=>(p.t+=dt)<.45);
+    const flag=level.length-95;
+    if(player.x+PH.w>=flag&&player.onGround){finishLevel();return;}
+    cam+=(clamp(player.x-viewW*.33,0,Math.max(0,level.length-viewW))-cam)*Math.min(1,dt*7);
+  }
+  function rr(x,y,w,h,r,fill,stroke){ctx.beginPath();ctx.roundRect(x,y,w,h,r);if(fill){ctx.fillStyle=fill;ctx.fill();}if(stroke){ctx.strokeStyle=stroke;ctx.stroke();}}
+  function ellipse(x,y,rx,ry,c){ctx.fillStyle=c;ctx.beginPath();ctx.ellipse(x,y,rx,ry,0,0,Math.PI*2);ctx.fill();}
+  function cloud(x,y,s){ctx.save();ctx.translate(x,y);ctx.scale(s,s);ellipse(-18,9,33,18,'#ffffff91');ellipse(7,-2,34,24,'#ffffffd0');ellipse(37,10,32,18,'#ffffffb4');ctx.restore();}
+  function background(){
+    const grad=ctx.createLinearGradient(0,0,0,H);grad.addColorStop(0,level.sky[0]);grad.addColorStop(1,level.sky[1]);ctx.fillStyle=grad;ctx.fillRect(0,0,viewW,H);
+    ctx.fillStyle=levelIdx===2?'#ffe1cf':'#fff2bc';ctx.beginPath();ctx.arc(viewW*.77,89,35,0,Math.PI*2);ctx.fill();
+    for(let i=0;i<13;i++){let x=((i*218-cam*.20)%(viewW+320)+(viewW+320))%(viewW+320)-120;cloud(x,64+(i%4)*40,.55+(i%3)*.18);}
+    for(let i=-2;i<12;i++){let x=i*185-cam*.30%185;
+      ctx.fillStyle=level.hill[0];ctx.beginPath();ctx.moveTo(x-85,H);ctx.quadraticCurveTo(x+22,210+(i%3)*45,x+155,H);ctx.fill();
+    }
+    for(let i=-2;i<16;i++){let x=i*139-cam*.47%139;
+      ctx.fillStyle=level.hill[1];ctx.beginPath();ctx.moveTo(x-75,H);ctx.quadraticCurveTo(x+38,319+(i%3)*28,x+160,H);ctx.fill();
+    }
+    for(let i=0;i<35;i++){let x=i*104-cam*.55%104-(i%3)*50;if(x<0)x+=viewW+140;let y=358+(i%3)*15;ellipse(x,y,4,9,'#e9f4ff66');}
+  }
+  function renderGround(){
+    for(const [a,b] of level.grounds){if(b<cam-50||a>cam+viewW+50)continue;const x=a-cam,w=b-a;ctx.fillStyle=level.ground;ctx.fillRect(x,GROUND,w,H-GROUND);
+      ctx.fillStyle='#132f40';ctx.globalAlpha=.3;for(let gx=a+17;gx<b;gx+=30){let yy=GROUND+19+(Math.floor(gx/29)%2)*21;rr(gx-cam,yy,11,6,2,'#102e43');}ctx.globalAlpha=1;
+      ctx.fillStyle=levelIdx===0?'#92ef9f':levelIdx===1?'#9eddf6':'#c5b4ff';rr(x,GROUND-9,w,13,5,ctx.fillStyle);
+      ctx.fillStyle='#ffffff6c';for(let gx=a+15;gx<b;gx+=46){ctx.fillRect(gx-cam,GROUND-7,11,2);}
+      for(let gx=a+63;gx<b-35;gx+=127){const py=GROUND-10;ctx.strokeStyle='#2b746b';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(gx-cam,py);ctx.lineTo(gx-cam-2,py-19);ctx.stroke();ellipse(gx-cam-4,py-19,5,5,level.accent);ellipse(gx-cam+1,py-22,4,4,'#fff2c2');}
+    }
+    for(const [px,py,pw] of level.platforms){if(px+pw<cam-20||px>cam+viewW+20)continue;rr(px-cam,py,pw,20,7,'#805e81');rr(px-cam+3,py+3,pw-6,9,4,levelIdx===2?'#c49ce8':'#93e4bf');ctx.fillStyle='#3d426f';for(let i=20;i<pw;i+=35)ctx.fillRect(px-cam+i,py+14,3,7);}
+  }
+  function renderFlag(){const x=level.length-95-cam;if(x<-40||x>viewW+40)return;ctx.lineWidth=5;ctx.strokeStyle='#fcf8e6';ctx.beginPath();ctx.moveTo(x,GROUND-157);ctx.lineTo(x,GROUND-3);ctx.stroke();ctx.fillStyle='#ffdc69';ctx.beginPath();ctx.moveTo(x+2,GROUND-155);ctx.lineTo(x+72,GROUND-139);ctx.lineTo(x+2,GROUND-117);ctx.closePath();ctx.fill();ctx.fillStyle='#fff6c7';ctx.font='bold 26px system-ui';ctx.fillText('★',x+16,GROUND-124);ellipse(x,GROUND-157,7,7,'#fff9ca');ctx.fillStyle='#eeecfd';ctx.font='800 13px system-ui';ctx.fillText('META',x-11,GROUND-177);}
+  function renderCoin(c){if(c.taken||c.x<cam-30||c.x>cam+viewW+30)return;const x=c.x-cam,y=c.y+Math.sin(gameT*4+c.x)*3;const spin=.75+.25*Math.cos(gameT*5+c.x);ctx.save();ctx.translate(x,y);ctx.scale(spin,1);ellipse(0,0,12,12,'#c27938');ellipse(0,-2,11,11,'#ffe77a');ellipse(0,-2,7,7,'#ffc652');ctx.fillStyle='#fff6bb';ctx.font='bold 15px system-ui';ctx.textAlign='center';ctx.fillText('★',0,3);ctx.restore();}
+  function renderEnemy(e){if(!e.alive||e.x<cam-50||e.x>cam+viewW+50)return;const x=e.x-cam,y=e.y;ctx.save();ctx.translate(x+17,y+15+Math.sin(gameT*6+e.phase)*1.7);
+    ctx.strokeStyle='#523373';ctx.lineWidth=4;ctx.lineCap='round';for(const s of [-1,1])for(let j=0;j<3;j++){ctx.beginPath();ctx.moveTo(s*10,-5+j*7);ctx.lineTo(s*(18+j*2),-13+j*11);ctx.stroke();}
+    ellipse(0,3,16,15,levelIdx===2?'#a45cc8':'#8355ab');ellipse(-5,-2,4,5,'#fff');ellipse(6,-2,4,5,'#fff');ellipse(-4,0,1.8,2.5,'#1b2742');ellipse(7,0,1.8,2.5,'#1b2742');ctx.strokeStyle='#603b81';ctx.lineWidth=1.5;ctx.beginPath();ctx.arc(1,7,4,0.12,Math.PI-.12);ctx.stroke();ctx.restore();}
+  function renderPlayer(){if(!player)return;const x=player.x-cam,y=player.y;ctx.save();if(player.invuln>0&&Math.floor(gameT*13)%2===0)ctx.globalAlpha=.45;ctx.translate(x+16,y+21);
+    // Animated shoes
+    let gait=player.onGround?Math.sin(player.anim*17)*Math.min(4,Math.abs(player.vx)/65):3;
+    rr(-13,14+gait,12,9,4,'#2b4563');rr(2,14-gait,13,9,4,'#2b4563');
+    // Green explorer jacket, bright scarf, backpack.
+    rr(-12,-3,24,24,8,'#45b98c','#247b75');rr(-17,0,7,18,4,'#35a882');rr(10,0,7,18,4,'#35a882');rr(-17,-2,7,18,4,'#6f68b8');
+    ctx.fillStyle='#ffc95b';ctx.fillRect(-11,-3,22,5);ctx.fillStyle='#f7bb58';ctx.beginPath();ctx.moveTo(9,-1);ctx.lineTo(19,6);ctx.lineTo(9,8);ctx.fill();
+    ellipse(0,-17,13,14,'#f3bf89');ellipse(-6,-18,2.4,3,'#1b364f');ellipse(5,-18,2.4,3,'#1b364f');
+    ctx.strokeStyle='#925e57';ctx.lineWidth=1.5;ctx.beginPath();ctx.arc(0,-14,4,.15,Math.PI-.15);ctx.stroke();
+    // Distinct original turquoise adventurer cap.
+    rr(-14,-34,28,12,7,'#2e89aa');rr(-15,-25,28,5,3,'#1e6c93');ellipse(4,-31,3,3,'#fff3bb');
+    ctx.restore();}
+  function renderParticles(){for(const p of sparkles){const x=p.x-cam,y=p.y,alpha=Math.max(0,1-p.t/.45);ctx.globalAlpha=alpha;for(let i=0;i<6;i++){const a=i*Math.PI/3+p.t*4,r=p.t*85;ellipse(x+Math.cos(a)*r,y+Math.sin(a)*r-20*p.t,3,3,p.kind==='hit'?'#ff9dbb':p.kind==='coin'?'#ffe36b':'#eefeff');}}ctx.globalAlpha=1;}
+  function draw(){if(!level){setLevel(0);}ctx.clearRect(0,0,viewW,H);background();ctx.save();ctx.beginPath();ctx.rect(0,0,viewW,H);ctx.clip();renderGround();coins.forEach(renderCoin);enemies.forEach(renderEnemy);renderFlag();renderPlayer();renderParticles();ctx.restore();}
+  function frame(t){if(!lastTime)lastTime=t;const dt=Math.min(.033,Math.max(0,(t-lastTime)/1000));lastTime=t;if(phase==='playing'){const steps=Math.max(1,Math.ceil(dt/.016));for(let i=0;i<steps;i++)tick(dt/steps);}draw();requestAnimationFrame(frame);}
+  setLevel(0);requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,15 @@
+{
+  "name": "ARCADE — Juegos",
+  "short_name": "ARCADE",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#090f21",
+  "theme_color": "#090f21",
+  "icons": [
+    {
+      "src": "favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
