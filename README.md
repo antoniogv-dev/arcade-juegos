@@ -2,11 +2,12 @@
 
 Sitio estático con videojuegos HTML5 originales, sin dependencias de terceros. Apto para celulares y computadores. Diseñado para agregar nuevos juegos sin modificar la portada.
 
-## Juegos iniciales
+## Juegos disponibles
 
 - **Laberinto Arácnido**: versión intermedia (15 × 15), 4 vidas, tres niveles y controles táctiles.
 - **Las Estrellas Perdidas**: tres mundos de plataformas, enemigos, monedas y controles táctiles.
 - **Blocks Arcade**: piezas giratorias, eliminación de filas, niveles y puntuación.
+- **HUELLA · Supervivencia**: supervivencia adaptativa de hasta cinco minutos, nueve memorias y cinco generaciones de cazadores.
 
 ## Agregar un juego más adelante
 
