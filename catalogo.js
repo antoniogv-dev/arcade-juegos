@@ -32,5 +32,13 @@ window.ARCADE_GAMES = [
       "Récord de puntos"
     ],
     "art": "blocks"
+  },
+  {
+    "slug": "huella-supervivencia",
+    "title": "HUELLA · Supervivencia",
+    "category": "Supervivencia adaptativa",
+    "description": "Sobreviva cinco minutos en una ciudad que aprende sus hábitos. Explore, recupere nueve memorias y engañe a cinco generaciones de cazadores.",
+    "badges": ["5 minutos", "Mundo adaptativo", "Exploración libre"],
+    "art": "huella"
   }
 ];
